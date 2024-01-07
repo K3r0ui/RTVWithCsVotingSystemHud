@@ -35,6 +35,7 @@ public class RtvWithCsVotingSystem : BasePlugin, IPluginConfig<PluginConfig>
     private int currentTime;
     private int timeleft;
     bool hasPrinted = false;
+    bool _rtvVotePassed = true;
 
     public PluginConfig Config { get; set; }
 
@@ -117,7 +118,7 @@ public class RtvWithCsVotingSystem : BasePlugin, IPluginConfig<PluginConfig>
     [CommandHelper(whoCanExecute:CommandUsage.CLIENT_ONLY)]
     public void OnRtVCommand(CCSPlayerController? player, CommandInfo cmd)
     {
-        
+       if ( _rtvVotePassed == true) { 
         const int rtvCooldownSeconds = 60;
         ulong steamID = player!.SteamID;
         string steamIDString = steamID.ToString();
@@ -160,7 +161,14 @@ public class RtvWithCsVotingSystem : BasePlugin, IPluginConfig<PluginConfig>
         if (_rtvCount.Count < Math.Round(required2 * 0.7)) return;
         
         VoteUsingCsHud();
-
+        _rtvCooldown.Clear();
+        _rtvVoted.Clear();
+        _rtvVotePassed = false;
+        }
+        else
+        {
+             Server.PrintToChatAll($" {Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.rtv_passed"]}");
+        }
     }
     
     [ConsoleCommand("css_unrtv", "Remove the RTV")]
@@ -230,8 +238,7 @@ $"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.
     {
         _rtvCount.Clear();
         _canRtv = false;
-        _rtvCooldown.Clear();
-        _rtvVoted.Clear();
+
 
     }
     [RequiresPermissions("@css/root")]
