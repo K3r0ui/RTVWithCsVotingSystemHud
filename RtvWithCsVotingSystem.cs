@@ -21,7 +21,7 @@ public class RtvWithCsVotingSystem : BasePlugin, IPluginConfig<PluginConfig>
     public override string ModuleName { get; } = "RTV Advanced System";
     public override string ModuleVersion { get; } = "1.0.0";
     public override string ModuleDescription { get; } = "Voting For change map system using CS Hud ";
-    public override string ModuleAuthor { get; } = "K4MY & BQN";
+    public override string ModuleAuthor { get; } = "K4mY & BQN";
     public List<CCSPlayerController> connectedPlayers = new List<CCSPlayerController>();
     private Dictionary<string, DateTime> _rtvCooldown = new Dictionary<string, DateTime>();
     private Dictionary<string, Boolean> _rtvVoted = new Dictionary<string, Boolean>();
