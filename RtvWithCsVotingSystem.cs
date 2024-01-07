@@ -173,7 +173,7 @@ public class RtvWithCsVotingSystem : BasePlugin, IPluginConfig<PluginConfig>
         if (_rtvCount.Count >= Math.Round(required2 * 0.7))
         {
             cmd.ReplyToCommand(
-                "YOU CANNOT UNRTV");
+$"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.rtv_passed"]}");
             return;
         }
         if (!_canRtv)
