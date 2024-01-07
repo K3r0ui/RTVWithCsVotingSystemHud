@@ -118,8 +118,9 @@ public class RtvWithCsVotingSystem : BasePlugin, IPluginConfig<PluginConfig>
     [CommandHelper(whoCanExecute:CommandUsage.CLIENT_ONLY)]
     public void OnRtVCommand(CCSPlayerController? player, CommandInfo cmd)
     {
-       
-        const int rtvCooldownSeconds = 60;
+        if (_rtvVotePassed == false)
+        {
+            const int rtvCooldownSeconds = 60;
         ulong steamID = player!.SteamID;
         string steamIDString = steamID.ToString();
 
@@ -160,11 +161,10 @@ public class RtvWithCsVotingSystem : BasePlugin, IPluginConfig<PluginConfig>
 
         if (_rtvCount.Count < Math.Round(required2 * 0.7)) return;
         Server.PrintToChatAll($" {Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.rtv_reached"]}");
+        
+        
         VoteUsingCsHud();
-        if (_rtvVotePassed == false)
-        {
-        VoteUsingCsHud();
-        _rtvVotePassed = true;
+        
         }
         else
         {
@@ -228,6 +228,7 @@ $"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.
     private void VoteUsingCsHud()
     {
         Server.ExecuteCommand("mp_timelimit 1");
+        _rtvVotePassed = true;
 
     }
     private static CCSGameRules GetGameRules()
