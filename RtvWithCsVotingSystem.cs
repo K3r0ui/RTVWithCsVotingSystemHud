@@ -159,7 +159,7 @@ public class RtvWithCsVotingSystem : BasePlugin, IPluginConfig<PluginConfig>
         Server.PrintToChatAll($"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.rtv", player.PlayerName, _rtvCount.Count, Math.Round(required2 * 0.7)]}");
 
         if (_rtvCount.Count < Math.Round(required2 * 0.7)) return;
-        
+        Server.PrintToChatAll($" {Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.rtv_reached"]}");
         VoteUsingCsHud();
         _rtvCooldown.Clear();
         _rtvVoted.Clear();
@@ -167,7 +167,7 @@ public class RtvWithCsVotingSystem : BasePlugin, IPluginConfig<PluginConfig>
         }
         else
         {
-             Server.PrintToChatAll($" {Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.rtv_passed"]}");
+            cmd.ReplyToCommand($" {Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.rtv_passed"]}");
         }
     }
     
@@ -238,7 +238,7 @@ $"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.
     {
         _rtvCount.Clear();
         _canRtv = false;
-        _rtvVotePassed = true;
+        _rtvVotePassed = false;
 
 
     }
