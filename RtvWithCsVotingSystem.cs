@@ -122,10 +122,7 @@ public class RtvWithCsVotingSystem : BasePlugin, IPluginConfig<PluginConfig>
             const int rtvCooldownSeconds = 60;
         ulong steamID = player!.SteamID;
         string steamIDString = steamID.ToString();
-        if (_rtvVotePassed.ContainsKey(steamIDString))
-        {
-            if (_rtvVotePassed[steamIDString] == false)
-            {
+
 
 
                 if (_rtvVoted.ContainsKey(steamIDString))
@@ -144,7 +141,16 @@ public class RtvWithCsVotingSystem : BasePlugin, IPluginConfig<PluginConfig>
                         cmd.ReplyToCommand($"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.rtv_cooldown", Math.Round(remainingCooldown)]}");
                         return;
                     }
-                }
+                    if (_rtvVotePassed.ContainsKey(steamIDString))
+                    {
+                         if (_rtvVotePassed[steamIDString] == true)
+
+                          {
+                    cmd.ReplyToCommand($" {Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.rtv_passed"]}");
+                    return;
+                        }
+                     }
+        }
                 if (!_canRtv)
                 {
                     cmd.ReplyToCommand(
@@ -166,15 +172,11 @@ public class RtvWithCsVotingSystem : BasePlugin, IPluginConfig<PluginConfig>
                 if (_rtvCount.Count < Math.Round(required2 * 0.7)) return;
                 Server.PrintToChatAll($" {Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.rtv_reached"]}");
 
-
+        
+            
+            
                 VoteUsingCsHud(player);
-            }
-
-            else
-            {
-                cmd.ReplyToCommand($" {Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.rtv_passed"]}");
-            }
-        }
+                
     }
     
     [ConsoleCommand("css_unrtv", "Remove the RTV")]
