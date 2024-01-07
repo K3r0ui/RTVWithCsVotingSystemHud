@@ -25,7 +25,6 @@ public class RtvWithCsVotingSystem : BasePlugin, IPluginConfig<PluginConfig>
     public List<CCSPlayerController> connectedPlayers = new List<CCSPlayerController>();
     private Dictionary<string, DateTime> _rtvCooldown = new Dictionary<string, DateTime>();
     private Dictionary<string, Boolean> _rtvVoted = new Dictionary<string, Boolean>();
-    private Dictionary<string, Boolean> _rtvVotePassed = new Dictionary<string, Boolean>();
     private List<ulong> _rtvCount = new();
     private bool _canRtv = false;
     private string displayTime;
@@ -36,6 +35,7 @@ public class RtvWithCsVotingSystem : BasePlugin, IPluginConfig<PluginConfig>
     private int currentTime;
     private int timeleft;
     bool hasPrinted = false;
+    bool rtvPassed = false;
 
     public PluginConfig Config { get; set; }
 
@@ -56,11 +56,11 @@ public class RtvWithCsVotingSystem : BasePlugin, IPluginConfig<PluginConfig>
         {
             CCSGameRules gameRules = GetGameRules();
 
-             gameStart = (int)gameRules.GameStartTime;
-             timelimit = (int)ConVar.Find("mp_timelimit").GetPrimitiveValue<float>() * 60;
-             currentTime = (int)Server.CurrentTime;
-             timeleft = timelimit - (currentTime - gameStart);
-             timeleft2 = timelimit/2 - (currentTime - gameStart);
+            gameStart = (int)gameRules.GameStartTime;
+            timelimit = (int)ConVar.Find("mp_timelimit").GetPrimitiveValue<float>() * 60;
+            currentTime = (int)Server.CurrentTime;
+            timeleft = timelimit - (currentTime - gameStart);
+            timeleft2 = timelimit / 2 - (currentTime - gameStart);
             if (timelimit == 0)
             {
                 return;
@@ -69,17 +69,17 @@ public class RtvWithCsVotingSystem : BasePlugin, IPluginConfig<PluginConfig>
             {
                 _canRtv = true;
             }
-            
-        if (timeleft2 == 0 && hasPrinted == false)
+
+            if (timeleft2 == 0 && hasPrinted == false)
             {
                 Server.PrintToChatAll($"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.RTVOn"]}");
                 hasPrinted = true;
             }
-           
+
             TimeSpan time = TimeSpan.FromSeconds(timeleft);
             DateTime dateTime = DateTime.Today.Add(time);
             displayTime = dateTime.ToString("mm:ss");
-            DateTime dateTime2= DateTime.Today.Add(TimeSpan.FromSeconds(timeleft2));
+            DateTime dateTime2 = DateTime.Today.Add(TimeSpan.FromSeconds(timeleft2));
             displayTime2 = dateTime2.ToString("mm:ss");
             foreach (var player in connectedPlayers)
             {
@@ -93,9 +93,9 @@ public class RtvWithCsVotingSystem : BasePlugin, IPluginConfig<PluginConfig>
                         {
                             if (Config.PluginMode == 0)
                             {
-                                
+
                                 string mainMessage = timeleft <= 0 ? Localizer["RTVWithCsVotingSystem.LastRound"] : Localizer["RTVWithCsVotingSystem.Timeleft"].ToString().Replace("{timeleft}", displayTime);
-                                string rtvMessage = timeleft2 <= 0 ? Localizer["RTVWithCsVotingSystem.RTVOn"]   : Localizer["RTVWithCsVotingSystem.RTV"].ToString().Replace("{timeleft}", displayTime2);
+                                string rtvMessage = timeleft2 <= 0 ? Localizer["RTVWithCsVotingSystem.RTVOn"] : Localizer["RTVWithCsVotingSystem.RTV"].ToString().Replace("{timeleft}", displayTime2);
                                 string combinedMessage = $"{mainMessage}\n{rtvMessage}";
                                 player.PrintToCenter(combinedMessage);
 
@@ -104,7 +104,7 @@ public class RtvWithCsVotingSystem : BasePlugin, IPluginConfig<PluginConfig>
 
                             if (Config.PluginMode == 1)
                             {
-                                
+
                                 player.PrintToCenterHtml($"<br><br> {(timeleft <= 0 ? Localizer["RTVWithCsVotingSystem.LastRound"] : $" {Localizer["RTVWithCsVotingSystem.Timeleft"].ToString().Replace("{timeleft}", displayTime)}")}", 1);
                             }
                         }
@@ -115,80 +115,68 @@ public class RtvWithCsVotingSystem : BasePlugin, IPluginConfig<PluginConfig>
     }
 
     [ConsoleCommand("css_rtv", "Launch the RTV")]
-    [CommandHelper(whoCanExecute:CommandUsage.CLIENT_ONLY)]
+    [CommandHelper(whoCanExecute: CommandUsage.CLIENT_ONLY)]
     public void OnRtVCommand(CCSPlayerController? player, CommandInfo cmd)
     {
-
-            const int rtvCooldownSeconds = 60;
+        if (rtvPassed == false) { 
+        const int rtvCooldownSeconds = 60;
         ulong steamID = player!.SteamID;
         string steamIDString = steamID.ToString();
 
-
-
-                if (_rtvVoted.ContainsKey(steamIDString))
-                {
-                    if (_rtvVoted[steamIDString] == true)
-                    {
-                        cmd.ReplyToCommand($"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.rtv_voted"]}");
-                        return;
-                    }
-                }
-                if (_rtvCooldown.ContainsKey(steamIDString))
-                {
-                    var remainingCooldown = (_rtvCooldown[steamIDString] - DateTime.UtcNow).TotalSeconds;
-                    if (remainingCooldown >= 0)
-                    {
-                        cmd.ReplyToCommand($"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.rtv_cooldown", Math.Round(remainingCooldown)]}");
-                       
-            }
-            else
+        if (_rtvVoted.ContainsKey(steamIDString))
+        {
+            if (_rtvVoted[steamIDString] == true)
             {
-                if (_rtvVotePassed.ContainsKey(steamIDString))
-                {
-                    if (_rtvVotePassed[steamIDString] == true)
-
-                    {
-                        cmd.ReplyToCommand($" {Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.rtv_passed"]}");
-                        return;
-                    }
-                }
+                cmd.ReplyToCommand($"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.rtv_voted"]}");
+                return;
             }
-  
         }
-                if (!_canRtv)
-                {
-                    cmd.ReplyToCommand(
-                        $"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.rtv_not_available"]}");
-                    return;
-                }
+        if (_rtvCooldown.ContainsKey(steamIDString))
+        {
+            var remainingCooldown = (_rtvCooldown[steamIDString] - DateTime.UtcNow).TotalSeconds;
+            if (remainingCooldown >= 0)
+            {
+                cmd.ReplyToCommand($"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.rtv_cooldown", Math.Round(remainingCooldown)]}");
+                return;
+            }
+        }
+        if (!_canRtv)
+        {
+            cmd.ReplyToCommand(
+                $"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.rtv_not_available"]}");
+            return;
+        }
 
-                if (_rtvCount.Contains(player!.SteamID)) return;
-                _rtvCount.Add(player.SteamID);
-                _rtvCooldown[steamIDString] = DateTime.UtcNow.AddSeconds(rtvCooldownSeconds);
-                _rtvVoted[steamIDString] = true;
+        if (_rtvCount.Contains(player!.SteamID)) return;
+        _rtvCount.Add(player.SteamID);
+        _rtvCooldown[steamIDString] = DateTime.UtcNow.AddSeconds(rtvCooldownSeconds);
+        _rtvVoted[steamIDString] = true;
 
 
-                var required2 = connectedPlayers.Count;
+        var required2 = connectedPlayers.Count;
 
-                //TODO: Add message saying player has voted to rtv
-                Server.PrintToChatAll($"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.rtv", player.PlayerName, _rtvCount.Count, Math.Round(required2 * 0.7)]}");
+        //TODO: Add message saying player has voted to rtv
+        Server.PrintToChatAll($"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.rtv", player.PlayerName, _rtvCount.Count, Math.Round(required2 * 0.7)]}");
 
-                if (_rtvCount.Count < Math.Round(required2 * 0.7)) return;
-                Server.PrintToChatAll($" {Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.rtv_reached"]}");
+        if (_rtvCount.Count < Math.Round(required2 * 0.7)) return;
 
-        
-            
-            
-                VoteUsingCsHud(player);
-                
+        VoteUsingCsHud();
+        _rtvCooldown.Clear();
+        _rtvVoted.Clear();
+        }
+        else
+        {
+            cmd.ReplyToCommand(
+                $"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.rtv_passed"]}");
+            return;
+        }
     }
-    
+
     [ConsoleCommand("css_unrtv", "Remove the RTV")]
-    [CommandHelper(whoCanExecute:CommandUsage.CLIENT_ONLY)]
+    [CommandHelper(whoCanExecute: CommandUsage.CLIENT_ONLY)]
     public void OnUnRtVCommand(CCSPlayerController? player, CommandInfo cmd)
     {
         var required2 = connectedPlayers.Count;
-       // _rtvVotePassed = false;
         if (_rtvCount.Count >= Math.Round(required2 * 0.7))
         {
             cmd.ReplyToCommand(
@@ -201,13 +189,13 @@ $"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.
                 $"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.unrtv_not_available"]}");
             return;
         }
-        
+
         if (!_rtvCount.Contains(player.SteamID)) return;
         _rtvCount.Remove(player.SteamID);
         Server.PrintToChatAll(
             $"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.unrtv", player.PlayerName, _rtvCount.Count, Math.Round(required2 * 0.7)]}");
     }
-    private HookResult EventOnEndMatchVote( EventEndmatchMapvoteSelectingMap @event , GameEventInfo info)
+    private HookResult EventOnEndMatchVote(EventEndmatchMapvoteSelectingMap @event, GameEventInfo info)
     {
         Server.PrintToChatAll($"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.vote_starting"]}");
         Server.PrintToChatAll($"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.vote_starting"]}");
@@ -224,28 +212,23 @@ $"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.
     {
 
         OnMapEnd();
-        
+
         return HookResult.Continue;
     }
     private HookResult EventOnRoundEnd(EventRoundEnd @event, GameEventInfo info)
     {
-            if (@event.Reason == 10)
+        if (@event.Reason == 10)
         {
             OnMapEnd();
         }
-    
+
         return HookResult.Continue;
     }
 
-    private void VoteUsingCsHud(CCSPlayerController? player)
+    private void VoteUsingCsHud()
     {
-        
-        ulong steamID = player!.SteamID;
-        string steamIDString = steamID.ToString();
         Server.ExecuteCommand("mp_timelimit 1");
-        _rtvVotePassed[steamIDString] = true;
-
-
+        rtvPassed = true;
 
     }
     private static CCSGameRules GetGameRules()
@@ -257,10 +240,7 @@ $"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.
     {
         _rtvCount.Clear();
         _canRtv = false;
-        _rtvCooldown.Clear();
-        _rtvVoted.Clear();
-        _rtvVotePassed.Clear();
-
+        rtvPassed = false;
 
     }
     [RequiresPermissions("@css/root")]
