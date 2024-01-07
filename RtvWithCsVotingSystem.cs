@@ -151,15 +151,15 @@ public class RtvWithCsVotingSystem : BasePlugin, IPluginConfig<PluginConfig>
         if (_rtvCount.Contains(player!.SteamID)) return;
         _rtvCount.Add(player.SteamID);
         _rtvCooldown[steamIDString] = DateTime.UtcNow.AddSeconds(rtvCooldownSeconds);
-        _rtvVoted[steamIDString] = true;
+        
 
 
         var required2 = connectedPlayers.Count;
 
         //TODO: Add message saying player has voted to rtv
         Server.PrintToChatAll($"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.rtv", player.PlayerName, _rtvCount.Count, Math.Round(required2 * 0.7)]}");
-
-        if (_rtvCount.Count < Math.Round(required2 * 0.7)) return;
+            _rtvVoted[steamIDString] = true;
+            if (_rtvCount.Count < Math.Round(required2 * 0.7)) return;
 
         VoteUsingCsHud();
         _rtvCooldown.Clear();
@@ -192,6 +192,9 @@ $"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.
         }
 
         if (!_rtvCount.Contains(player.SteamID)) return;
+        ulong steamID = player!.SteamID;
+        string steamIDString = steamID.ToString();
+        _rtvVoted[steamIDString] = false;
         _rtvCount.Remove(player.SteamID);
         Server.PrintToChatAll(
             $"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.unrtv", player.PlayerName, _rtvCount.Count, Math.Round(required2 * 0.7)]}");
