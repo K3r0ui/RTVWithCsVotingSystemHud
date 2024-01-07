@@ -119,6 +119,7 @@ public class RtvWithCsVotingSystem : BasePlugin, IPluginConfig<PluginConfig>
     public void OnRtVCommand(CCSPlayerController? player, CommandInfo cmd)
     {
         if (rtvPassed == false) { 
+
         const int rtvCooldownSeconds = 60;
         ulong steamID = player!.SteamID;
         string steamIDString = steamID.ToString();
