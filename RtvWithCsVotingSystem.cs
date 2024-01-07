@@ -177,6 +177,7 @@ public class RtvWithCsVotingSystem : BasePlugin, IPluginConfig<PluginConfig>
     public void OnUnRtVCommand(CCSPlayerController? player, CommandInfo cmd)
     {
         var required2 = connectedPlayers.Count;
+        _rtvVotePassed = false;
         if (_rtvCount.Count >= Math.Round(required2 * 0.7))
         {
             cmd.ReplyToCommand(
