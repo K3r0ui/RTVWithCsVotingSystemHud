@@ -139,17 +139,21 @@ public class RtvWithCsVotingSystem : BasePlugin, IPluginConfig<PluginConfig>
                     if (remainingCooldown >= 0)
                     {
                         cmd.ReplyToCommand($"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.rtv_cooldown", Math.Round(remainingCooldown)]}");
+                       
+            }
+            else
+            {
+                if (_rtvVotePassed.ContainsKey(steamIDString))
+                {
+                    if (_rtvVotePassed[steamIDString] == true)
+
+                    {
+                        cmd.ReplyToCommand($" {Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.rtv_passed"]}");
                         return;
                     }
-                    if (_rtvVotePassed.ContainsKey(steamIDString))
-                    {
-                         if (_rtvVotePassed[steamIDString] == true)
-
-                          {
-                    cmd.ReplyToCommand($" {Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.rtv_passed"]}");
-                    return;
-                        }
-                     }
+                }
+            }
+  
         }
                 if (!_canRtv)
                 {
