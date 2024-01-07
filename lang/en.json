@@ -2,6 +2,7 @@
   {
     "RTVWithCsVotingSystem.prefix": "{lightblue}[RTV]",
     "RTVWithCsVotingSystem.rtv_cooldown": "{default} You have to wait {lime}{0} {default}seconds before using {lightred}!rtv {default}or {lightred}!unrtv {default}again.",
+    "RTVWithCsVotingSystem.rtv_passed": " {lightred}RTV {default}has already been successful. Waiting for the final round's end to initiate the map vote!",
     "RTVWithCsVotingSystem.rtv_voted": " {default}You have already voted for a map change. Type {purple}!unrtv {default}in chat if you want to remove your vote.",
     "RTVWithCsVotingSystem.rtv_vote_starting": "{default} Vote for the next map !",
     "RTVWithCsVotingSystem.rtv_not_available": "{lightred} RTV{default} is currently unavailable. Press the {purple}TAB key {default}to view the remaining time until {lightred}RTV {default}becomes available.",
