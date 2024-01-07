@@ -25,6 +25,7 @@ public class RtvWithCsVotingSystem : BasePlugin, IPluginConfig<PluginConfig>
     public List<CCSPlayerController> connectedPlayers = new List<CCSPlayerController>();
     private Dictionary<string, DateTime> _rtvCooldown = new Dictionary<string, DateTime>();
     private Dictionary<string, Boolean> _rtvVoted = new Dictionary<string, Boolean>();
+    private Dictionary<string, Boolean> _rtvVotePassed = new Dictionary<string, Boolean>();
     private List<ulong> _rtvCount = new();
     private bool _canRtv = false;
     private string displayTime;
@@ -35,7 +36,6 @@ public class RtvWithCsVotingSystem : BasePlugin, IPluginConfig<PluginConfig>
     private int currentTime;
     private int timeleft;
     bool hasPrinted = false;
-    bool _rtvVotePassed = false;
 
     public PluginConfig Config { get; set; }
 
@@ -118,57 +118,62 @@ public class RtvWithCsVotingSystem : BasePlugin, IPluginConfig<PluginConfig>
     [CommandHelper(whoCanExecute:CommandUsage.CLIENT_ONLY)]
     public void OnRtVCommand(CCSPlayerController? player, CommandInfo cmd)
     {
-        if (_rtvVotePassed == false)
-        {
+
             const int rtvCooldownSeconds = 60;
         ulong steamID = player!.SteamID;
         string steamIDString = steamID.ToString();
-
-        if (_rtvVoted.ContainsKey(steamIDString))
+        if (_rtvVotePassed.ContainsKey(steamIDString))
         {
-            if (_rtvVoted[steamIDString] == true)
+            if (_rtvVotePassed[steamIDString] == false)
             {
-                cmd.ReplyToCommand($"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.rtv_voted"]}");
-                return;
+
+
+                if (_rtvVoted.ContainsKey(steamIDString))
+                {
+                    if (_rtvVoted[steamIDString] == true)
+                    {
+                        cmd.ReplyToCommand($"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.rtv_voted"]}");
+                        return;
+                    }
+                }
+                if (_rtvCooldown.ContainsKey(steamIDString))
+                {
+                    var remainingCooldown = (_rtvCooldown[steamIDString] - DateTime.UtcNow).TotalSeconds;
+                    if (remainingCooldown >= 0)
+                    {
+                        cmd.ReplyToCommand($"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.rtv_cooldown", Math.Round(remainingCooldown)]}");
+                        return;
+                    }
+                }
+                if (!_canRtv)
+                {
+                    cmd.ReplyToCommand(
+                        $"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.rtv_not_available"]}");
+                    return;
+                }
+
+                if (_rtvCount.Contains(player!.SteamID)) return;
+                _rtvCount.Add(player.SteamID);
+                _rtvCooldown[steamIDString] = DateTime.UtcNow.AddSeconds(rtvCooldownSeconds);
+                _rtvVoted[steamIDString] = true;
+
+
+                var required2 = connectedPlayers.Count;
+
+                //TODO: Add message saying player has voted to rtv
+                Server.PrintToChatAll($"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.rtv", player.PlayerName, _rtvCount.Count, Math.Round(required2 * 0.7)]}");
+
+                if (_rtvCount.Count < Math.Round(required2 * 0.7)) return;
+                Server.PrintToChatAll($" {Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.rtv_reached"]}");
+
+
+                VoteUsingCsHud(player);
             }
-        }
-        if (_rtvCooldown.ContainsKey(steamIDString))
-        {
-            var remainingCooldown = (_rtvCooldown[steamIDString] - DateTime.UtcNow).TotalSeconds;
-            if (remainingCooldown >= 0)
+
+            else
             {
-                cmd.ReplyToCommand($"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.rtv_cooldown", Math.Round(remainingCooldown)]}");
-                return;
+                cmd.ReplyToCommand($" {Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.rtv_passed"]}");
             }
-        } 
-        if (!_canRtv)
-        {
-            cmd.ReplyToCommand(
-                $"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.rtv_not_available"]}");
-            return;
-        }
-        
-        if (_rtvCount.Contains(player!.SteamID) ) return;
-        _rtvCount.Add(player.SteamID);
-        _rtvCooldown[steamIDString] = DateTime.UtcNow.AddSeconds(rtvCooldownSeconds);
-        _rtvVoted[steamIDString] = true;
-
-        
-        var required2 = connectedPlayers.Count;
-        
-        //TODO: Add message saying player has voted to rtv
-        Server.PrintToChatAll($"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.rtv", player.PlayerName, _rtvCount.Count, Math.Round(required2 * 0.7)]}");
-
-        if (_rtvCount.Count < Math.Round(required2 * 0.7)) return;
-        Server.PrintToChatAll($" {Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.rtv_reached"]}");
-        
-        
-        VoteUsingCsHud();
-        
-        }
-        else
-        {
-            cmd.ReplyToCommand($" {Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.rtv_passed"]}");
         }
     }
     
@@ -177,7 +182,7 @@ public class RtvWithCsVotingSystem : BasePlugin, IPluginConfig<PluginConfig>
     public void OnUnRtVCommand(CCSPlayerController? player, CommandInfo cmd)
     {
         var required2 = connectedPlayers.Count;
-        _rtvVotePassed = false;
+       // _rtvVotePassed = false;
         if (_rtvCount.Count >= Math.Round(required2 * 0.7))
         {
             cmd.ReplyToCommand(
@@ -226,10 +231,15 @@ $"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.
         return HookResult.Continue;
     }
 
-    private void VoteUsingCsHud()
+    private void VoteUsingCsHud(CCSPlayerController? player)
     {
+        
+        ulong steamID = player!.SteamID;
+        string steamIDString = steamID.ToString();
         Server.ExecuteCommand("mp_timelimit 1");
-        _rtvVotePassed = true;
+        _rtvVotePassed[steamIDString] = true;
+
+
 
     }
     private static CCSGameRules GetGameRules()
@@ -243,7 +253,7 @@ $"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.
         _canRtv = false;
         _rtvCooldown.Clear();
         _rtvVoted.Clear();
-        _rtvVotePassed = false;
+        _rtvVotePassed.Clear();
 
 
     }
