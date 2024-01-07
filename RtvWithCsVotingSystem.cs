@@ -238,6 +238,7 @@ $"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.
     {
         _rtvCount.Clear();
         _canRtv = false;
+        _rtvVotePassed = true;
 
 
     }
