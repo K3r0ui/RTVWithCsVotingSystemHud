@@ -1,0 +1,17 @@
+﻿
+  {
+    "RTVWithCsVotingSystem.prefix": "{lightblue}[RTV]",
+    "RTVWithCsVotingSystem.rtv_cooldown": "{default} You have to wait {lime}{0} {default}seconds before using {lightred}!rtv {default}or {lightred}!unrtv {default}again.",
+    "RTVWithCsVotingSystem.rtv_voted": " {default}You have already voted for a map change. Type {purple}!unrtv {default}in chat if you want to remove your vote.",
+    "RTVWithCsVotingSystem.rtv_vote_starting": "{default} Vote for the next map !",
+    "RTVWithCsVotingSystem.rtv_not_available": "{lightred} RTV{default} is currently unavailable. Press the {purple}TAB key {default}to view the remaining time until {lightred}RTV {default}becomes available.",
+    "RTVWithCsVotingSystem.unrtv_not_available": "{lightred} RTV{default} is currently unavailable. Press the {purple}TAB key {default}to view the remaining time until {lightred}RTV {default}becomes available.",
+    "RTVWithCsVotingSystem.rtv_enabled": "{lightred} RTV{default} is now available! Type {purple}!rtv {default}in chat to vote for a map change.",
+    "RTVWithCsVotingSystem.rtv": "{green}{0}{default} has voted to change the map [{lime}{1} {default}voted/{lime}{2} {default}required].",
+    "RTVWithCsVotingSystem.unrtv": "{green}{0}{default} has removed their vote to change the map [{lime}{1} {default}voted/{lime}{2} {default}required].",
+    "RTVWithCsVotingSystem.Timeleft" : "Time left until map end: {timeleft}",
+    "RTVWithCsVotingSystem.RTV" : "Time left until RTV: {timeleft}",
+    "RTVWithCsVotingSystem.RTVOn" : "RTV is now available !",
+    "RTVWithCsVotingSystem.LastRound" : "Last round !"
+  }
+  
