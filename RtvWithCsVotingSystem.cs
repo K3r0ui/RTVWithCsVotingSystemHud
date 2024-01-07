@@ -35,7 +35,7 @@ public class RtvWithCsVotingSystem : BasePlugin, IPluginConfig<PluginConfig>
     private int currentTime;
     private int timeleft;
     bool hasPrinted = false;
-    bool _rtvVotePassed = true;
+    bool _rtvVotePassed = false;
 
     public PluginConfig Config { get; set; }
 
@@ -161,11 +161,10 @@ public class RtvWithCsVotingSystem : BasePlugin, IPluginConfig<PluginConfig>
         if (_rtvCount.Count < Math.Round(required2 * 0.7)) return;
         Server.PrintToChatAll($" {Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.rtv_reached"]}");
         VoteUsingCsHud();
-        if (_rtvVotePassed == true)
+        if (_rtvVotePassed == false)
         {
-        _rtvCooldown.Clear();
-        _rtvVoted.Clear();
-        _rtvVotePassed = false;
+        VoteUsingCsHud();
+        _rtvVotePassed = true;
         }
         else
         {
@@ -240,7 +239,9 @@ $"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.
     {
         _rtvCount.Clear();
         _canRtv = false;
-        _rtvVotePassed = true;
+        _rtvCooldown.Clear();
+        _rtvVoted.Clear();
+        _rtvVotePassed = false;
 
 
     }
