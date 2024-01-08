@@ -220,7 +220,10 @@ $"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.
     public void onElapsedTimeCommand(CCSPlayerController? player, CommandInfo cmd)
     {
         int elapsedtime = currentTime - gameStart;
-        DateTime elapsedtimemmss = DateTime.ParseExact(elapsedtime.ToString(), "mm:ss", CultureInfo.InvariantCulture);
+        TimeSpan time = TimeSpan.FromSeconds(elapsedtime);
+        DateTime dateTime = DateTime.Today.Add(time);
+        string elapsedtimemmss = dateTime.ToString("mm:ss");
+        
         cmd.ReplyToCommand($"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.elapsed", elapsedtimemmss]}");
         return;
     }
