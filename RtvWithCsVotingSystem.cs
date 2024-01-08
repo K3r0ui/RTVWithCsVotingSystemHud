@@ -7,6 +7,7 @@ using CounterStrikeSharp.API.Modules.Commands;
 using CounterStrikeSharp.API.Modules.Config;
 using CounterStrikeSharp.API.Modules.Cvars;
 using CounterStrikeSharp.API.Modules.Utils;
+using System.Globalization;
 
 
 
@@ -202,22 +203,25 @@ $"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.
     public void OnTimeLeftCommand(CCSPlayerController? player, CommandInfo cmd)
     {
         var output = timeleft <= 0 ? Localizer["RTVWithCsVotingSystem.LastRound"] : Localizer["RTVWithCsVotingSystem.Timeleft"].ToString().Replace("{timeleft}", displayTime);
-        player.PrintToCenter($"{output}");
+        cmd.ReplyToCommand($"{output}");
             return;
     }
-    
+
+    [ConsoleCommand("css_nextmap", "Show elapsed time")]
+    [CommandHelper(whoCanExecute: CommandUsage.CLIENT_ONLY)]
     public void onNextMapCommand(CCSPlayerController? player, CommandInfo cmd)
     {
        
-        player.PrintToCenter($"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.nextmap"]}");
+        cmd.ReplyToCommand($"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.nextmap"]}");
         return;
     }
-    [ConsoleCommand("css_elapsedtime", "Show elapsed time")]
+    [ConsoleCommand("css_elapsedtime", "Shows what left until map change")]
     [CommandHelper(whoCanExecute: CommandUsage.CLIENT_ONLY)]
     public void onElapsedTimeCommand(CCSPlayerController? player, CommandInfo cmd)
     {
         int elapsedtime = currentTime - gameStart;
-        player.PrintToCenter($"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.elapsed", elapsedtime]}");
+        DateTime elapsedtimemmss = DateTime.ParseExact(elapsedtime.ToString(), "mm:ss", CultureInfo.InvariantCulture);
+        cmd.ReplyToCommand($"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.elapsed", elapsedtimemmss]}");
         return;
     }
 
