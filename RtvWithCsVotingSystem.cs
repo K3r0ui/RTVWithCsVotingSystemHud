@@ -207,7 +207,7 @@ $"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.
             return;
     }
 
-    [ConsoleCommand("css_nextmap", "Show elapsed time")]
+    [ConsoleCommand("css_nextmap", "Next map is decided by vote")]
     [CommandHelper(whoCanExecute: CommandUsage.CLIENT_ONLY)]
     public void onNextMapCommand(CCSPlayerController? player, CommandInfo cmd)
     {
@@ -215,7 +215,7 @@ $"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.
         cmd.ReplyToCommand($"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.nextmap"]}");
         return;
     }
-    [ConsoleCommand("css_elapsedtime", "Shows what left until map change")]
+    [ConsoleCommand("css_elapsedtime", "Shows the elapsed time")]
     [CommandHelper(whoCanExecute: CommandUsage.CLIENT_ONLY)]
     public void onElapsedTimeCommand(CCSPlayerController? player, CommandInfo cmd)
     {
