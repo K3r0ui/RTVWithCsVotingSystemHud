@@ -6,10 +6,7 @@ using CounterStrikeSharp.API.Modules.Admin;
 using CounterStrikeSharp.API.Modules.Commands;
 using CounterStrikeSharp.API.Modules.Config;
 using CounterStrikeSharp.API.Modules.Cvars;
-using CounterStrikeSharp.API.Modules.Entities;
 using CounterStrikeSharp.API.Modules.Utils;
-using Newtonsoft.Json;
-using System.Numerics;
 
 
 
@@ -20,8 +17,8 @@ public class RtvWithCsVotingSystem : BasePlugin, IPluginConfig<PluginConfig>
 {
     public override string ModuleName { get; } = "RTV Advanced System";
     public override string ModuleVersion { get; } = "1.0.0";
-    public override string ModuleDescription { get; } = "Voting For change map system using CS Hud ";
-    public override string ModuleAuthor { get; } = "K4mY & BQN";
+    public override string ModuleDescription { get; } = "Voting For change map system using CS Hud ( CS Voting System ) ";
+    public override string ModuleAuthor { get; } = "K4mY & BQN (K3r0ui)";
     public List<CCSPlayerController> connectedPlayers = new List<CCSPlayerController>();
     private Dictionary<string, DateTime> _rtvCooldown = new Dictionary<string, DateTime>();
     private Dictionary<string, Boolean> _rtvVoted = new Dictionary<string, Boolean>();
@@ -199,11 +196,36 @@ $"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.
         Server.PrintToChatAll(
             $"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.unrtv", player.PlayerName, _rtvCount.Count, Math.Round(required2 * 0.7)]}");
     }
+
+    [ConsoleCommand("css_timeleft", "Show timeleft")]
+    [CommandHelper(whoCanExecute: CommandUsage.CLIENT_ONLY)]
+    public void OnTimeLeftCommand(CCSPlayerController? player, CommandInfo cmd)
+    {
+        var output = timeleft <= 0 ? Localizer["RTVWithCsVotingSystem.LastRound"] : Localizer["RTVWithCsVotingSystem.Timeleft"].ToString().Replace("{timeleft}", displayTime);
+        player.PrintToCenter($"{output}");
+            return;
+    }
+    
+    public void onNextMapCommand(CCSPlayerController? player, CommandInfo cmd)
+    {
+       
+        player.PrintToCenter($"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.nextmap"]}");
+        return;
+    }
+    [ConsoleCommand("css_elapsedtime", "Show elapsed time")]
+    [CommandHelper(whoCanExecute: CommandUsage.CLIENT_ONLY)]
+    public void onElapsedTimeCommand(CCSPlayerController? player, CommandInfo cmd)
+    {
+        int elapsedtime = currentTime - gameStart;
+        player.PrintToCenter($"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.elapsed", elapsedtime]}");
+        return;
+    }
+
     private HookResult EventOnEndMatchVote(EventEndmatchMapvoteSelectingMap @event, GameEventInfo info)
     {
-        Server.PrintToChatAll($"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.vote_starting"]}");
-        Server.PrintToChatAll($"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.vote_starting"]}");
-        Server.PrintToChatAll($"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.vote_starting"]}");
+        Server.PrintToChatAll($"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.rtv_vote_starting"]}");
+        Server.PrintToChatAll($"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.rtv_vote_starting"]}");
+        Server.PrintToChatAll($"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.rtv_vote_starting"]}");
         return HookResult.Continue;
     }
     private HookResult EventOnMatchStart(EventBeginNewMatch @event, GameEventInfo info)
@@ -266,6 +288,7 @@ $"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.
         if (!player.IsBot)
         {
             connectedPlayers.Add(player);
+            
             Console.Write($"{player.PlayerName} added in connectedPlayers");
             return HookResult.Continue;
         }
