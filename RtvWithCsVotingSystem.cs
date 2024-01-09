@@ -203,7 +203,7 @@ $"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.
     public void OnTimeLeftCommand(CCSPlayerController? player, CommandInfo cmd)
     {
         var output = timeleft <= 0 ? Localizer["RTVWithCsVotingSystem.LastRound"] : Localizer["RTVWithCsVotingSystem.Timeleft"].ToString().Replace("{timeleft}", displayTime);
-        cmd.ReplyToCommand($"{output}");
+        cmd.ReplyToCommand($"{Localizer["RTVWithCsVotingSystem.prefix"]}"+" "+" {output}");
             return;
     }
 
