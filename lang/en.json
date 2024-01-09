@@ -13,6 +13,7 @@
     "RTVWithCsVotingSystem.rtv": " {green}{0}{default} has voted to change the map [{lime}{1} {default}voted/{lime}{2} {default}required].",
     "RTVWithCsVotingSystem.unrtv": " {green}{0}{default} has removed their vote to change the map [{lime}{1} {default}voted/{lime}{2} {default}required].",
     "RTVWithCsVotingSystem.Timeleft" : "Time left until map end: {lime}{timeleft}{default}.",
+    "RTVWithCsVotingSystem.RTVOn" : "{default} RTV is now available! Type {purple}!rtv in chat to vote for a map change.",
     "RTVWithCsVotingSystem.RTV" : "Time left until RTV: {timeleft}",
     "RTVWithCsVotingSystem.LastRound" : "Last round!"
   }
