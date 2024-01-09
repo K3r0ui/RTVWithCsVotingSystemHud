@@ -227,14 +227,6 @@ $"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.
         cmd.ReplyToCommand($"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.elapsed", elapsedtimemmss]}");
         return;
     }
-
-    private HookResult EventOnEndMatchVote(EventGameEnd @event, GameEventInfo info)
-    {
-        Server.PrintToChatAll($"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.rtv_vote_starting"]}");
-        Server.PrintToChatAll($"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.rtv_vote_starting"]}");
-        Server.PrintToChatAll($"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.rtv_vote_starting"]}");
-        return HookResult.Continue;
-    }
     private HookResult EventOnMatchStart(EventBeginNewMatch @event, GameEventInfo info)
     {
         OnMapEnd();
