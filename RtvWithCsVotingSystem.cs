@@ -70,7 +70,7 @@ public class RtvWithCsVotingSystem : BasePlugin, IPluginConfig<PluginConfig>
 
             if (timeleft2 == 0 && hasPrinted == false)
             {
-                Server.PrintToChatAll($"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.RTVOn"]}");
+                Server.PrintToChatAll($"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.rtv_enabled"]}");
                 hasPrinted = true;
             }
 
