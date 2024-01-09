@@ -48,7 +48,7 @@ public class RtvWithCsVotingSystem : BasePlugin, IPluginConfig<PluginConfig>
         RegisterEventHandler<EventBeginNewMatch>(EventOnMatchStart);
         RegisterEventHandler<EventRoundEnd>(EventOnRoundEnd);
         RegisterEventHandler<EventCsPreRestart>(EventOnCsPreRestart);
-        RegisterEventHandler<EventEndmatchMapvoteSelectingMap>(EventOnEndMatchVote);
+        RegisterEventHandler<EventGameEnd>(EventOnEndMatchVote);
 
         RegisterListener<Listeners.OnTick>(() =>
         {
@@ -228,7 +228,7 @@ $"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.
         return;
     }
 
-    private HookResult EventOnEndMatchVote(EventEndmatchMapvoteSelectingMap @event, GameEventInfo info)
+    private HookResult EventOnEndMatchVote(EventGameEnd @event, GameEventInfo info)
     {
         Server.PrintToChatAll($"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.rtv_vote_starting"]}");
         Server.PrintToChatAll($"{Localizer["RTVWithCsVotingSystem.prefix"]} {Localizer["RTVWithCsVotingSystem.rtv_vote_starting"]}");
