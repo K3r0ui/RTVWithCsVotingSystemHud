@@ -48,7 +48,6 @@ public class RtvWithCsVotingSystem : BasePlugin, IPluginConfig<PluginConfig>
         RegisterEventHandler<EventBeginNewMatch>(EventOnMatchStart);
         RegisterEventHandler<EventRoundEnd>(EventOnRoundEnd);
         RegisterEventHandler<EventCsPreRestart>(EventOnCsPreRestart);
-        RegisterEventHandler<EventGameEnd>(EventOnEndMatchVote);
 
         RegisterListener<Listeners.OnTick>(() =>
         {
