@@ -1,4 +1,4 @@
-# RTV system for counter strike voting [ community servers ]
+# RTV system for Counter Strike 2 [ community servers ]
 
 ## Requirements:
 
