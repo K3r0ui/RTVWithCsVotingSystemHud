@@ -28,4 +28,4 @@ Vote Execution: Following a successful RTV, the plugin waits for the round's con
 We acknowledges the efforts of CS2Fixes, who have successfully reverse-engineered and implemented a new voting system through their Vote Manager plugin. It's possible to do the same with CSSharp but we don't have the time to go through all that as 2.
 
 ## Demo 
-![Demo]([demo/demo.gif](https://im4.ezgif.com/tmp/ezgif-4-eaf373bf90.gif)https://im4.ezgif.com/tmp/ezgif-4-eaf373bf90.gif)
+![Demo]([[demo/demo.gif](https://im4.ezgif.com/tmp/ezgif-4-eaf373bf90.gif)https://im4.ezgif.com/tmp/ezgif-4-eaf373bf90.gif](https://media.discordapp.net/attachments/1149999717896425563/1202318260809244673/ezgif-4-eaf373bf90.gif)
