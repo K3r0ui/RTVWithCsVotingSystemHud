@@ -11,21 +11,21 @@ Compatibility: Fully compatible with both Linux and Windows operating systems.
 * Ensure that Counter-Strike Sharp and Metamod are installed and up to date.
 * Restart your CS:S server.
 ## Functionality:
-**Initial State:** RTV is disabled at the start of the map.
-**Activation Mechanism:** The plugin monitors the mp_timelimit value from the server's settings. RTV is activated once half of this time limit has elapsed.
-**Voting Process:** To initiate a successful RTV, 60% of connected players (excluding bots) must enter !rtv in the chat.
-Vote Execution: Following a successful RTV, the plugin waits for the round's conclusion before initiating the end-match vote.
+* **Initial State:** RTV is disabled at the start of the map.
+* **Activation Mechanism:** The plugin monitors the mp_timelimit value from the server's settings. RTV is activated once half of this time limit has elapsed.
+* **Voting Process:** To initiate a successful RTV, 60% of connected players (excluding bots) must enter !rtv in the chat.
+* **Vote Execution:** Following a successful RTV, the plugin waits for the round's conclusion before initiating the end-match vote.
 
 ## Additional Features:
 
-**In-Game Information:** Players can view the remaining time for RTV availability and the time left until the map ends by pressing the TAB key.
-**Vote Retraction:** After entering !rtv, players have the option to retract their vote by typing !unrtv in chat.
-**Cooldown Period:** To prevent abuse, a cooldown period is implemented after using !unrtv, deterring spam and troll behaviors.
+* **In-Game Information:** Players can view the remaining time for RTV availability and the time left until the map ends by pressing the TAB key.
+* **Vote Retraction:** After entering !rtv, players have the option to retract their vote by typing !unrtv in chat.
+* **Cooldown Period:** To prevent abuse, a cooldown period is implemented after using !unrtv, deterring spam and troll behaviors.
 
 ## Planned Enhancements:
 
-**Nomination System:** We aim to incorporate a nomination system into the voting process. However, this is a challenging endeavor due to the need to modify the existing, and somewhat flawed, end-map vote system. The complexity of this task is compounded by issues that Valve needs to address. 
-We acknowledges the efforts of CS2Fixes, who have successfully reverse-engineered and implemented a new voting system through their Vote Manager plugin. It's possible to do the same with CSSharp but we don't have the time to go through all that as 2.
+* **Nomination System:** We aim to incorporate a nomination system into the voting process. However, this is a challenging endeavor due to the need to modify the existing, and somewhat flawed, end-map vote system. The complexity of this task is compounded by issues that Valve needs to address. 
+* We acknowledges the efforts of CS2Fixes, who have successfully reverse-engineered and implemented a new voting system through their Vote Manager plugin. It's possible to do the same with CSSharp but we don't have the time to go through all that as 2.
 
 ## Demo 
 ![ezgif-5-fd12191a2f](https://github.com/K3r0ui/RTVWithCsVotingSystemHud/assets/69015436/a61cda34-0f83-417d-99e3-744a217eb679)
