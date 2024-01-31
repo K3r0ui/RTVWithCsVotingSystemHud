@@ -6,15 +6,11 @@ Counter-Strike Sharp: Version 144 or higher.
 Metamod: Version 2.X or above.
 Compatibility: Fully compatible with both Linux and Windows operating systems.
 ## Installation
-
+* Download the latest release from the Releases page.
+* Extract the contents of the downloaded zip file to your server's addons directory.
+* Ensure that Counter-Strike Sharp and Metamod are installed and up to date.
+* Restart your CS:S server.
 ## Functionality:
-
-Download the latest release from the Releases page.
-Extract the contents of the downloaded zip file to your server's addons directory.
-Ensure that Counter-Strike Sharp and Metamod are installed and up to date.
-Restart your CS:S server.
-
-
 Initial State: RTV is disabled at the start of the map.
 Activation Mechanism: The plugin monitors the mp_timelimit value from the server's settings. RTV is activated once half of this time limit has elapsed.
 Voting Process: To initiate a successful RTV, 60% of connected players (excluding bots) must enter !rtv in the chat.
